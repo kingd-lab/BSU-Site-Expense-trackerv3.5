@@ -326,14 +326,33 @@
       return;
     }
 
+    // Sent in chunks rather than one call for the whole file: a write
+    // action is transmitted as a GET with the entire JSON body packed
+    // into a single URL query parameter (see api.js), and Apps Script's
+    // script.googleusercontent.com/macros/echo redirect has a hard size
+    // limit on that URL. A full import of hundreds of rows in one call
+    // exceeds it and fails with net::ERR_FAILED 400; batches of
+    // CHUNK_SIZE stay comfortably under it.
+    const CHUNK_SIZE = 30;
     const btn = document.getElementById('confirmImportBtn');
-    btn.disabled = true; btn.textContent = 'Importing…';
+    btn.disabled = true;
+    let imported = 0;
     try {
-      const result = await Api.submitExpensesBulk(expenses);
-      showToast(`Imported ${result.count} expenses successfully`, 'success');
+      for (let i = 0; i < expenses.length; i += CHUNK_SIZE) {
+        const chunk = expenses.slice(i, i + CHUNK_SIZE);
+        btn.textContent = `Importing ${Math.min(i + CHUNK_SIZE, expenses.length)}/${expenses.length}…`;
+        const result = await Api.submitExpensesBulk(chunk);
+        imported += result.count;
+      }
+      showToast(`Imported ${imported} expenses successfully`, 'success');
       resetToUpload();
     } catch (err) {
-      showToast(err.message, 'error');
+      showToast(
+        imported > 0
+          ? `Imported ${imported} of ${expenses.length} before failing: ${err.message}`
+          : err.message,
+        'error'
+      );
     } finally {
       btn.disabled = false; btn.textContent = 'Import All Rows';
     }
