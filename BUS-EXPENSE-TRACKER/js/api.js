@@ -1,10 +1,22 @@
-/**
+/**urity and quality
+Insights
+Settings
+BSU-Site-Expense-trackerv3.5/BUS-EXPENSE-TRACKER/js
+/
+api.js
+in
+main
+
+Edit
+
+Preview
+
  * api.js — thin wrapper around the Google Apps Script Web App.
  *
  * IMPORTANT: set API_URL to your deployed Apps Script Web App URL,
  * e.g. https://script.google.com/macros/s/AKfycb.../exec
  */
-const API_URL = 'https://script.google.com/macros/s/AKfycbyvEl2WHRz8-CTbIBHXIDpSC5zyGYcFjO4SggfQWxPj7ldHK7QneBXrNKD2BB6wPNO0/exec';
+const API_URL = 'https://script.google.com/macros/s/AKfycby-4cHzMkyeWBH-1Qk2C5SS8ZA4iQD0Njvxb0Urz1_4C-LEKH5IzsfJ8fyyHk7jdTDy1w/exec';
 
 /**
  * parseLocalDate — the backend now always sends dates as plain
